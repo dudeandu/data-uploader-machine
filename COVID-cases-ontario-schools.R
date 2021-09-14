@@ -74,7 +74,7 @@ for(i in 1:nrow(lastdayinstances)) {
 # !!!!!!!! might be better to do this to the larger data frame at the end
 all_schools_cases_df$id <- seq.int(0,nrow(all_schools_cases_df)-1)
 
-colnames(all_schools_cases_df) <- c("Region","Board_Number","Board_Name","Board_Type","Board_Language","School_Number","School_Name","School_Level","School_Language","School_Type","School_Special_Conditions_Code","Suite","PO_Box","Street","City","Province","Postal_Code","Phone","Fax","Grade_Range","Date_Open","School_Email","School_Website","Board_Website","collected_date","reported_date","confirmed_student_cases","confirmed_staff_cases","confirmed_unspecified_cases","total_confirmed_cases","id")
+colnames(all_schools_cases_df) <- c("Region","Board_Number","Board_Name","Board_Type","Board_Language","School_Number","School_Name","School_Level","School_Language","School_Type","School_Special_Conditions_Code","Suite","PO_Box","Street","City","Province","Postal_Code","Latitude","Longitude","Phone","Fax","Grade_Range","Date_Open","School_Email","School_Website","Board_Website","collected_date","reported_date","confirmed_student_cases","confirmed_staff_cases","confirmed_unspecified_cases","total_confirmed_cases","id")
 
 
 ## svae the file into a new CSV
