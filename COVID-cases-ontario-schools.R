@@ -1,4 +1,4 @@
-setwd("~/Desktop/00-COVID-cases-in-schools-dashboard/Data-wrangling-R")
+setwd("~/Desktop/00-COVID-cases-in-schools-dashboard/data-uploader/data-uploader-machine")
 
 # install.packages("plyr")
 require("devtools")
