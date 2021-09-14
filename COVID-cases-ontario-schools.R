@@ -10,7 +10,8 @@ library("plyr")
 # list.files()
 
 # data_active_cases_raw <- read.csv("schoolsactivecovid.csv", header = TRUE)
-data_active_cases_raw <- read.csv("https://data.ontario.ca/dataset/b1fef838-8784-4338-8ef9-ae7cfd405b41/resource/8b6d22e2-7065-4b0f-966f-02640be366f2/download/schoolsactivecovid.csv", header = TRUE)
+data_summary_cases_raw <- read.csv("https://data.ontario.ca/dataset/b1fef838-8784-4338-8ef9-ae7cfd405b41/resource/7e644a48-6040-4ee0-9216-1f88121b21ba/download/schoolcovidsummary2021_2022.csv", header = TRUE)
+data_active_cases_raw <- read.csv("https://data.ontario.ca/dataset/b1fef838-8784-4338-8ef9-ae7cfd405b41/resource/dc5c8788-792f-4f91-a400-036cdf28cfe8/download/schoolrecentcovid2021_2022.csv", header = TRUE)
 data_allSchools_raw <- read.csv("publicly_funded_schools_xlsx_august_2021_en.csv", header = TRUE)
 
 ## GET the last date
@@ -78,6 +79,8 @@ colnames(all_schools_cases_df) <- c("Region","Board_Number","Board_Name","Board_
 
 ## svae the file into a new CSV
 write.csv(all_schools_cases_df,"schoolsactivecovid_adaiID.csv", row.names = FALSE)
+
+write.csv(data_summary_cases_raw,"schoolcovidsummary2021_2022.csv", row.names = FALSE)
 
 
 
