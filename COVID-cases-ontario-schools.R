@@ -1,4 +1,4 @@
-setwd("~/Desktop/torstar projects/00-COVID-cases-in-schools-dashboard/data-uploader/data-uploader-machine")
+setwd("~/Desktop/torstar-projects/00-COVID-cases-in-schools-dashboard/data-uploader/data-uploader-machine")
 
 # install.packages("plyr")
 require("devtools")
