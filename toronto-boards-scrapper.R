@@ -33,6 +33,41 @@ all_viamonde = page %>% html_nodes("#c10765 table td") %>% html_text() %>% str_r
 all_viamonde
 
 
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+# TDSB 
+
+set_headers <- character()
+ncolumns <- 5
+for(i in 2:ncolumns+1) {
+  set_headers <- c(set_headers,all_TDSB[i])
+  print(all_TDSB[i])
+}
+
+all_TDSB_DF <- data_frame()
+counter <- 1
+rowmaker <- character()
+for(i in 7:length(all_TDSB)) {
+  
+  # print(all_TDSB[i])
+  # print(i)
+  # print(counter)
+  rowmaker <- c(rowmaker, all_TDSB[i])
+  
+  if (counter == ncolumns) {
+    print(rowmaker)
+    all_TDSB_DF <- rbind(all_TDSB_DF,rowmaker)
+    counter <- 1
+    rowmaker <- character()
+  } else {
+    counter <- counter + 1
+  }
+}
+
+colnames(all_TDSB_DF) <- set_headers
+
+
 
 
 
