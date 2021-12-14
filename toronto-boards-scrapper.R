@@ -14,7 +14,8 @@ library("stringr")
 # monavenir
 link <- "https://www.cscmonavenir.ca/infos-covid-19/"
 page <- read_html(link)
-all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor.elementor-clearfix p") %>% html_text() %>% str_remove(., "\t")
+# all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor.elementor-clearfix p") %>% html_text() %>% str_remove(., "\t")
+all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor") %>% html_text() %>% gsub("\t","",.) %>% gsub("\n","",.)
 all_monavenir
 
 set_headers <- c("date","Establishment","Region","Cases","Additional information")
@@ -148,6 +149,8 @@ counter <- 1
 rowmaker <- character()
 toprowsoff <- fromthisrow+ncolumns+ncolumns+1
 bottomrowsoff <- 28
+thisSchool <- character()
+thisSchoolStatus <- character()
 # Data seems to begin on item 90
 for(i in 90:(length(all_TCDSB)-bottomrowsoff)) {
   
@@ -155,9 +158,14 @@ for(i in 90:(length(all_TCDSB)-bottomrowsoff)) {
   # print(i)
   # print(counter)
   if (all_TCDSB[i+5] != "Active" && counter == 2){
-    rowmaker <- c(rowmaker, "","", all_TCDSB[i]) 
+    rowmaker <- c(rowmaker, thisSchool,thisSchoolStatus, all_TCDSB[i]) 
     counter <- 4
   } else if(counter > 1) {
+    if (counter == 2) {
+      thisSchool <- all_TCDSB[i]
+    } else if (counter == 3) {
+      thisSchoolStatus <- all_TCDSB[i]
+    }
     rowmaker <- c(rowmaker, all_TCDSB[i]) 
   }
   
