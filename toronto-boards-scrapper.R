@@ -11,46 +11,6 @@ library("stringr")
 #########################################################################################################
 #########################################################################################################
 #########################################################################################################
-# monavenir
-link <- "https://www.cscmonavenir.ca/infos-covid-19/"
-page <- read_html(link)
-# all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor.elementor-clearfix p") %>% html_text() %>% str_remove(., "\t")
-all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor") %>% html_text() %>% gsub("\t","",.) %>% gsub("\n","",.)
-all_monavenir
-
-set_headers <- c("date","Establishment","Region","Cases","Additional information")
-ncolumns <- 5
-
-all_monavenir_DF <- data_frame()
-counter <- 1
-rowmaker <- character()
-toprowsoff <- 1
-bottomrowsoff <- 0
-for(i in toprowsoff:(length(all_monavenir)) ) {
-  
-  # print(all_monavenir[i])
-  # print(i)
-  # print(counter)
-  rowmaker <- c(rowmaker, all_monavenir[i])
-  
-  if (counter == ncolumns) {
-    print(rowmaker)
-    all_monavenir_DF <- rbind(all_monavenir_DF,rowmaker)
-    counter <- 1
-    rowmaker <- character()
-  } else {
-    counter <- counter + 1
-  }
-}
-
-colnames(all_monavenir_DF) <- set_headers
-
-write.csv(all_monavenir_DF,"boardsRaw/all_monavenir_RAW.csv")
-
-
-#########################################################################################################
-#########################################################################################################
-#########################################################################################################
 # viamonde
 link <- "https://csviamonde.ca/parents/infos-covid-19/lutter-contre-la-covid-19/"
 page <- read_html(link)
@@ -147,7 +107,7 @@ ncolumns <- 7
 all_TCDSB_DF <- data_frame()
 counter <- 1
 rowmaker <- character()
-toprowsoff <- fromthisrow+ncolumns+ncolumns+1
+# toprowsoff <- fromthisrow+ncolumns+ncolumns+1
 bottomrowsoff <- 28
 thisSchool <- character()
 thisSchoolStatus <- character()
@@ -182,6 +142,132 @@ for(i in 90:(length(all_TCDSB)-bottomrowsoff)) {
 colnames(all_TCDSB_DF) <- set_headers
 
 write.csv(all_TCDSB_DF,"boardsRaw/all_TCDSB_RAW.csv")
+
+
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+# monavenir
+link <- "https://www.cscmonavenir.ca/infos-covid-19/"
+page <- read_html(link)
+# all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor.elementor-clearfix p") %>% html_text() %>% str_remove(., "\t")
+all_monavenir = page %>% html_nodes("#elementor-tab-content-1591 .elementor-text-editor") %>% html_text() %>% gsub("\t","",.) %>% gsub("\n","",.) %>% gsub("
+ÉÉC ","",.)
+all_monavenir
+
+set_headers <- c("date","Establishment","Region","Cases","Additional information","Student cases","Staff cases","Other cases","Outbreak","School Status")
+ncolumns <- 5
+
+all_monavenir_DF <- data_frame()
+counter <- 1
+rowmaker <- character()
+toprowsoff <- 1
+bottomrowsoff <- 0
+for(i in toprowsoff:(length(all_monavenir)) ) {
+  
+  # print(all_monavenir[i])
+  # print(i)
+  # print(counter)
+  rowmaker <- c(rowmaker, all_monavenir[i])
+  
+  if (counter == ncolumns) {
+    print(rowmaker)
+    all_monavenir_DF <- rbind(all_monavenir_DF,c(rowmaker,0,0,0,0,"Open"))
+    counter <- 1
+    rowmaker <- character()
+  } else {
+    counter <- counter + 1
+  }
+}
+
+colnames(all_monavenir_DF) <- set_headers
+
+#  USE grept to extract all cases by case type
+# pattern <- "/(\d+ élève)/g"
+# pattern <- "[:digit:] élève"
+for (i in 1:nrow(all_monavenir_DF) ){
+  tempStringEctract <- ""
+  casetotal <- 0
+  # print(all_monavenir_DF$Cases[i])
+  # print(str_extract(all_monavenir_DF$Cases[i], "[:digit:] élève"))
+  
+  # find student (élève)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] élève") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] élève")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Student cases"] <- casetotal
+  }
+  
+  # find other student (autre élève)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] autre élève") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] autre élève")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Student cases"] <- casetotal
+  }
+  
+  # find other students (autres élève)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] autres élève") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] autres élève")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Student cases"] <- casetotal
+  }
+  
+  # find child (enfant)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] enfant") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] enfant")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Student cases"] <- casetotal
+  }
+  
+  # find other child (autre enfant)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] autre enfant") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] autre enfant")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Student cases"] <- casetotal
+  }
+  
+  # find member of staff (membre du personnel)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] membre du personnel") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] membre du personnel")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Staff cases"] <- casetotal
+  }
+  
+  # find community member (membre de la communauté)
+  if (str_detect(all_monavenir_DF$Cases[i], "[:digit:] membre de la communauté") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "[:digit:] membre de la communauté")
+    casetotal <- as.numeric(str_extract(all_monavenir_DF$Cases[i], "[:digit:]"))
+    # print(casetotal)
+    all_monavenir_DF[i,"Other cases"] <- casetotal
+  }
+  
+  # find outbreak (Avis d’éclosion)
+  if (str_detect(all_monavenir_DF$Cases[i], "d’éclosion") == TRUE || str_detect(all_monavenir_DF[i,"Additional information"], "d’éclosion") == TRUE){
+    all_monavenir_DF[i,"Outbreak"] <- 1
+  }
+  
+  # Schol status
+  if (str_detect(all_monavenir_DF[i,"Additional information"], "École fermée") == TRUE
+      || str_detect(all_monavenir_DF[i,"Additional information"], "école fermée") == TRUE){
+    tempStringEctract <- str_extract(all_monavenir_DF$Cases[i], "d’éclosion")
+    # print(casetotal)
+    all_monavenir_DF[i,"School Status"] <- "Closed"
+  }
+}
+
+
+
+
+write.csv(all_monavenir_DF,"boardsRaw/all_monavenir_RAW.csv")
+
+
+
 
 
 
